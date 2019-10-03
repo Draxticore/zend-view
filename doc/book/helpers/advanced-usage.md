@@ -209,50 +209,50 @@ class SpecialPurpose extends AbstractHelper
 > As an example, if we need the `escapeHtml()` helper, we could write our helper
 > as follows:
 >
-> ```php
-> namespace MyModule\View\Helper;
-> 
-> use Zend\View\Helper\EscapeHtml;
-> 
-> class SpecialPurpose
-> {
->     private $count = 0;
-> 
->     private $escaper;
-> 
->     public function __construct(EscapeHtml $escaper)
->     {
->         $this->escaper = $escaper;
->     }
-> 
->     public function __invoke()
->     {
->         $this->count++;
->         $output  = sprintf("I have seen 'The Jerk' %d time(s).", $this->count);
->         $escaper = $this->escaper;
->         return $escaper($output);
->     }
-> }
-> ```
+```php
+namespace MyModule\View\Helper;
+
+use Zend\View\Helper\EscapeHtml;
+
+class SpecialPurpose
+{
+    private $count = 0;
+
+    private $escaper;
+
+    public function __construct(EscapeHtml $escaper)
+    {
+        $this->escaper = $escaper;
+    }
+
+    public function __invoke()
+    {
+        $this->count++;
+        $output  = sprintf("I have seen 'The Jerk' %d time(s).", $this->count);
+        $escaper = $this->escaper;
+        return $escaper($output);
+    }
+}
+```
 > 
 > Then we would write a factory like the following:
 > 
-> ```php
-> use Zend\ServiceManager\AbstractPluginManager;
-> 
-> class SpecialPurposeFactory
-> {
->     public function __invoke($container)
->     {
->         if (! $container instanceof AbstractPluginManager) {
->             // zend-servicemanager v3. v2 passes the helper manager directly.
->             $container = $container->get('ViewHelperManager');
->         }
-> 
->         return new SpecialPurpose($container->get('escapeHtml'));
->     }
-> }
-> ```
+```php
+use Zend\ServiceManager\AbstractPluginManager;
+
+class SpecialPurposeFactory
+{
+    public function __invoke($container)
+    {
+        if (! $container instanceof AbstractPluginManager) {
+            // zend-servicemanager v3. v2 passes the helper manager directly.
+            $container = $container->get('ViewHelperManager');
+        }
+
+        return new SpecialPurpose($container->get('escapeHtml'));
+    }
+}
+```
 >
 > If access to the view were required, we'd pass the `PhpRenderer` service
 > instead.
